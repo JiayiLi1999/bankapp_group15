@@ -10,8 +10,8 @@ CREATE TABLE userAccount
     password    TEXT        NOT NULL,
     firstName   TEXT        NOT NULL,
     lastName    TEXT        NOT NULL,
-    SSN         TEXT UNIQUE NOT NULL,
-    phoneNumber TEXT        NOT NULL,
+    SSN         INT         NOT NULL,
+    phoneNumber BIGINT      NOT NULL,
     address     TEXT        NOT NULL
 );
 
@@ -26,8 +26,8 @@ CREATE TABLE bankAccount
 CREATE TABLE transactionRecord
 (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    bankAccountId   INTEGER NOT NULL,
-    transactionTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    bankAccountId   INTEGER        NOT NULL,
+    transactionTime TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount          DECIMAL(16, 2) NOT NULL,
     memo            TEXT,
     FOREIGN KEY (bankAccountId) REFERENCES bankAccount (id)

@@ -10,21 +10,20 @@ from flask import session
 from flask import url_for
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-
 from core.db import get_db
+from core.utils import verify_user_login_info, verify_amount
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 def login_required(view):
     """View decorator that redirects anonymous users to the login page."""
+
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for("auth.login"))
-
         return view(**kwargs)
-
     return wrapped_view
 
 
@@ -32,12 +31,11 @@ def login_required(view):
 def load_logged_in_user():
     """If a user id is stored in the session, load the user object from the database into ``g.user``."""
     user_id = session.get("user_id")
-
     if user_id is None:
         g.user = None
     else:
         g.user = (
-            get_db().execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
+            get_db().execute("SELECT * FROM userAccount WHERE id = ?", (user_id,)).fetchone()
         )
 
 
@@ -47,24 +45,48 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        first_name = request.form["first_name"]
+        last_name = request.form["last_name"]
+        ssn = request.form["ssn"]
+        phone_number = request.form["phone_number"]
+        address = request.form["address"]
+        initial_deposit = request.form["initial_deposit"]
         db = get_db()
         error = None
 
         if not username:
             error = "Username is required."
+        elif not verify_user_login_info(username):
+            error = "Invalid username. (Restricted to '_', '-', '.', digits, and lowercase alphabetical characters)"
         elif not password:
             error = "Password is required."
+        elif not verify_user_login_info(password):
+            error = "Invalid password. (Restricted to '_', '-', '.', digits, and lowercase alphabetical characters)"
+        elif not first_name:
+            error = 'First name required.'
+        elif not last_name:
+            error = 'Last name required.'
+        elif not ssn.isnumeric():
+            error = 'Invalid SSN.'
+        elif not phone_number.isnumeric():
+            error = 'Invalid phone number.'
+        elif not address:
+            error = 'Address required.'
+        elif not initial_deposit:
+            error = 'Initial deposit required.'
+        elif not verify_amount(initial_deposit):
+            error = "Invalid amount"
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO user (username, password, firstName, lastName, SSN, phoneNumber, address) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (username, generate_password_hash(password), first_name, last_name, ssn, phone_number, address),
                 )
                 db.commit()
             except db.IntegrityError:
-                # The username was already taken, which caused the
-                # commit to fail. Show a validation error.
+                # The username was already taken, which caused the commit to fail. Show a validation error.
                 error = f"User {username} is already registered."
             else:
                 # Success, go to the login page.
@@ -84,7 +106,7 @@ def login():
         db = get_db()
         error = None
         user = db.execute(
-            "SELECT * FROM user WHERE username = ?", (username,)
+            "SELECT * FROM userAccount WHERE username = ?", (username,)
         ).fetchone()
 
         if user is None:
@@ -108,3 +130,6 @@ def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
     return redirect(url_for("index"))
+
+
+
