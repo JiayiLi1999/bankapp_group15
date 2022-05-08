@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from core import auth  # apply the blueprints to the app
+from core import auth, transaction, account  # apply the blueprints to the app
 from core import db  # register the database commands
 
 
@@ -23,7 +23,11 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+
     app.register_blueprint(auth.bp)
+    app.register_blueprint(account.bp)
+    app.register_blueprint(transaction.bp)
+
     app.add_url_rule("/", endpoint="index")
 
     return app

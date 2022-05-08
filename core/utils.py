@@ -1,5 +1,7 @@
 import re
 
+from core.db import get_db
+
 MAX_AMOUNT = 4294967295.99
 MIN_AMOUNT = 0.00
 
@@ -25,3 +27,14 @@ def verify_user_login_info(input):
         return False
     else:
         return True
+
+
+def get_bank_account(id):
+    bank_account = get_db().execute(
+        'SELECT ba.id, userAccountId, balance'
+        ' FROM bankAccount ba JOIN userAccount ua ON ba.userAccountId = ua.id'
+        ' WHERE ba.id = ?',
+        (id,)
+    ).fetchone()
+
+    return bank_account

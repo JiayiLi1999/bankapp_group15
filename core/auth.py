@@ -11,7 +11,7 @@ from flask import url_for
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from core.db import get_db
-from core.utils import verify_user_login_info, verify_amount
+from core.utils import verify_user_login_info
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -50,7 +50,6 @@ def register():
         ssn = request.form["ssn"]
         phone_number = request.form["phone_number"]
         address = request.form["address"]
-        initial_deposit = request.form["initial_deposit"]
         db = get_db()
         error = None
 
@@ -72,19 +71,16 @@ def register():
             error = 'Invalid phone number.'
         elif not address:
             error = 'Address required.'
-        elif not initial_deposit:
-            error = 'Initial deposit required.'
-        elif not verify_amount(initial_deposit):
-            error = "Invalid amount"
 
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password, firstName, lastName, SSN, phoneNumber, address) "
+                    "INSERT INTO userAccount (username, password, firstName, lastName, SSN, phoneNumber, address) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (username, generate_password_hash(password), first_name, last_name, ssn, phone_number, address),
                 )
                 db.commit()
+
             except db.IntegrityError:
                 # The username was already taken, which caused the commit to fail. Show a validation error.
                 error = f"User {username} is already registered."
