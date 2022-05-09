@@ -1,0 +1,32 @@
+.idea/
+.vscode
+
+venv/
+.venv/
+env*
+
+.DS_Store
+
+*.pyc
+*.pyo
+.pytest_cache/
+
+dist/
+build/
+docs/_build/
+
+*.egg
+*.egg-info/
+_mailinglist
+.tox/
+.cache/
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+*,cover
