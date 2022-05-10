@@ -1,7 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from flask import flash
 from flask import redirect
-from flask import render_template
 from flask import request
 from flask import url_for
 
@@ -9,14 +8,14 @@ from core.auth import login_required
 from core.db import get_db
 from core.utils import verify_amount, get_bank_account
 
-bp = Blueprint("transaction", __name__, url_prefix="/transaction")
+bp = Blueprint("transaction", __name__)
 
 
-@bp.route('/<int:id>/deposit', methods=('GET', 'POST'))
+@bp.route('/deposit/<id>', methods=('GET', 'POST'))
 @login_required
-def deposit(bank_account_id):
+def deposit(id):
     error = None
-    bank_account = get_bank_account(bank_account_id)
+    bank_account = get_bank_account(id)
 
     if request.method == 'POST':
         deposit_amount = request.form["deposit_amount"]
@@ -24,29 +23,28 @@ def deposit(bank_account_id):
             error = "Deposit amount is required."
         elif not verify_amount(deposit_amount):
             error = "Invalid deposit amount."
+        update_balance = bank_account['balance'] + int(deposit_amount)
 
-    update_balance = bank_account['balance'] + deposit_amount
+        if error is None:
+            db = get_db()
+            db.execute(
+                'UPDATE bankAccount SET balance = ?'
+                ' WHERE id = ?',
+                (update_balance, id)
+            )
+            db.commit()
+            return redirect(url_for('index'))
+        else:
+            flash(error)
 
-    if error is None:
-        db = get_db()
-        db.execute(
-            'UPDATE bankAccount SET balance = ?'
-            ' WHERE id = ?',
-            (update_balance, bank_account_id)
-        )
-        db.commit()
-        return redirect(url_for('account.index'))
-    else:
-        flash(error)
-
-    return render_template('account/deposit.html', account=bank_account)
+    return render_template('deposit.html', account=bank_account)
 
 
-@bp.route('/<int:id>/withdraw', methods=('GET', 'POST'))
+@bp.route('/withdraw/<id>', methods=('GET', 'POST'))
 @login_required
-def withdraw(bank_account_id):
+def withdraw(id):
     error = None
-    bank_account = get_bank_account(bank_account_id)
+    bank_account = get_bank_account(id)
 
     if request.method == 'POST':
         withdraw_amount = request.form["withdraw_amount"]
@@ -54,21 +52,21 @@ def withdraw(bank_account_id):
             error = "Withdraw amount is required."
         elif not verify_amount(withdraw_amount):
             error = "Invalid withdraw amount."
+        update_balance = bank_account['balance'] - int(withdraw_amount)
 
-    update_balance = bank_account['balance'] - withdraw_amount
-    if update_balance < 0:
-        error = "Cannot withdraw, not enough balance."
+        if update_balance < 0:
+            error = "Cannot withdraw, not enough balance."
 
-    if error is None:
-        db = get_db()
-        db.execute(
-            'UPDATE bankAccount SET balance = ?'
-            ' WHERE id = ?',
-            (update_balance, bank_account_id)
-        )
-        db.commit()
-        return redirect(url_for('account.index'))
-    else:
-        flash(error)
+        if error is None:
+            db = get_db()
+            db.execute(
+                'UPDATE bankAccount SET balance = ?'
+                ' WHERE id = ?',
+                (update_balance, id)
+            )
+            db.commit()
+            return redirect(url_for('index'))
+        else:
+            flash(error)
 
-    return render_template('account/withdraw.html', account=bank_account)
+    return render_template('withdraw.html', account=bank_account)

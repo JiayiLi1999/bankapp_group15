@@ -7,8 +7,10 @@
         <thead>
         <tr>
             <th class="header">ID</th>
-      <th class="header">Balance</th>
-      <th class="header"></th>
+            <th class="header">Balance</th>
+            <th class="header"></th>
+            <th class="header"></th>
+            <th class="header"></th>
         </tr>
         </thead>
         <tbody>
@@ -18,6 +20,12 @@
            <td> {{ account.balance }} </td>
             <td>
                 <a href="{{ url_for('account.remove',id=account.id) }}">Delete Account</a>
+            </td>
+            <td>
+                <a href="{{ url_for('transaction.deposit',id=account.id) }}">Deposit</a>
+            </td>
+            <td>
+                <a href="{{ url_for('transaction.withdraw',id=account.id) }}">Withdraw</a>
             </td>
         </tr>
         {% endfor %}
