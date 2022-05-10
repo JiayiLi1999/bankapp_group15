@@ -93,9 +93,6 @@ def register():
 
     return render_template("register.html")
 
-@bp.route("/")
-def index():
-    return "Hello"
 @bp.route("/login", methods=("GET", "POST"))
 def login():
     """Log in a registered user by adding the user id to the session."""

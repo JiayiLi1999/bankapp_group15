@@ -10,7 +10,7 @@ def verify_amount(amount):
     # amount is restricted to positive and provided in decimal without any leading 0’s
     pattern = re.compile('(0|[1-9][0-9]*)(\\.[0-9]{2})?')
     match = pattern.fullmatch(amount)
-
+    amount = float(amount)
     if match is None or amount > MAX_AMOUNT or amount < MIN_AMOUNT:
         return False
     else:
