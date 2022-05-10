@@ -1,3 +1,4 @@
+import decimal
 import re
 
 from core.db import get_db
@@ -10,12 +11,15 @@ def verify_amount(amount):
     # amount is restricted to positive and provided in decimal without any leading 0’s
     pattern = re.compile('^[\d\.]+$')
     match = pattern.fullmatch(amount)
-    amount = float(amount)
-    if match is None or amount > MAX_AMOUNT or amount < MIN_AMOUNT:
+    try:
+        amount = float(amount)
+        d = decimal.Decimal(str(amount))
+        if match is None or amount > MAX_AMOUNT or amount < MIN_AMOUNT or abs(d.as_tuple().exponent) > 2:
+            return False
+        else:
+            return True
+    except ValueError:
         return False
-    else:
-        return True
-
 
 def verify_user_login_info(input):
     # username and password are restricted to underscore, hyphens, dots, digits, and lowercase alphabetical characters
