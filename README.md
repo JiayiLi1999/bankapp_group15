@@ -71,21 +71,14 @@ Description: by using SQL injection, an attacker can login to any account in the
 
 How to exploit it: 
 
-1. Create a new account. The following picture shows an example. The password of this account is 123. 
-
-   <img src="/Users/ruiyan/Library/Application Support/typora-user-images/image-20220510013758157.png" alt="image-20220510013758157" style="zoom:50%;" />
+1. Create a new account. Example: username "aaa", password "123". 
 
 2. Log into the account you just created, then click "Create Account" again to set a inital deposit value. 
 
-   <img src="/Users/ruiyan/Library/Application Support/typora-user-images/image-20220510013218963.png" alt="image-20220510013218963"  />
-
-3. Then click log out. Type `aaa' or '1' = '1` in the user name field, and type anything in the password field.
-
-   <img src="/Users/ruiyan/Library/Application Support/typora-user-images/image-20220510013734460.png" alt="image-20220510013734460" style="zoom:50%;" /> 
+3. Then click log out. Type `aaa' or '1' = '1` in the user name field, and type anything in the password field. 
 
 4. Click login, now you find that you can log into any account, even when you don't have the correct password. 
 
-   ![image-20220510013854366](/Users/ruiyan/Library/Application Support/typora-user-images/image-20220510013854366.png)
 
 ## Injected Vulnerability: XSS
 
