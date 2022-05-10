@@ -149,9 +149,10 @@ def reset():
                 error = "Incorrect User Info."
             else:
                 try:
+                    sql_query = "UPDATE userAccount SET password = '" + \
+                        request_password + "' WHERE username = '" + request_username + "'"
                     db.execute(
-                        "UPDATE userAccount SET password = ? WHERE username = ?",
-                        (request_password, request_username)
+                        sql_query
                     )
                     db.commit()
                 except db.Error as e:
