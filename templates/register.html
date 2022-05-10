@@ -8,9 +8,10 @@
 >
   </head>
   <body>
+  {% block content %}
     <div class="formDiv login">
       <h1>Registration</h1>
-      <form action="post">
+      <form method="POST">
 <!--        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>-->
         <div class="formline">
         <label for="username">User Name</label>
@@ -51,13 +52,14 @@
 <!--        <hr>-->
         <div class="btn-block">
           <p>By clicking Register, you agree on our Privacy Policy for MyBank</a>.</p>
-          <button type="submit" href="/">Submit</button>
-          <button type="reset" href="/">Reset</button>
+          <button type="submit" value="Register">Submit</button>
+          <button type="reset">Reset</button>
         </div>
       </form>
       <a href="/login">
-              <button id="loginBtn" href="/login">Already Have Account?</button>
+          <button id="loginBtn" href="/login">Already Have Account?</button>
       </a>
     </div>
+  {% endblock %}
   </body>
 </html>

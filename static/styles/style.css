@@ -75,7 +75,7 @@ html, body {
   margin-top: 10px;
   text-align: center;
   }
-  button {
+  .btn {
   width: 100%;
   padding: 10px 0;
   margin: 4px auto;

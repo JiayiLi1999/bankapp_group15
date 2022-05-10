@@ -39,8 +39,9 @@ def load_logged_in_user():
         )
 
 
-@bp.route("/register", methods=("GET", "POST"))
+@bp.route("/register", methods=["GET", "POST"])
 def register():
+    print(request.method)
     """Register a new user. Validates that the username is not already taken. Hashes the password for security."""
     if request.method == "POST":
         username = request.form["username"]
@@ -93,6 +94,8 @@ def register():
     return render_template("register.html")
 
 @bp.route("/")
+def index():
+    return "Hello"
 @bp.route("/login", methods=("GET", "POST"))
 def login():
     """Log in a registered user by adding the user id to the session."""
