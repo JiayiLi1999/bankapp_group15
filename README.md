@@ -82,6 +82,17 @@ How to exploit it:
 
 ## Injected Vulnerability: XSS
 
+## URL Redirection to Untrusted Site
+
+Description: our bank system uses untrusted data while building URL redirects. This leaves the application vulnerable to malicious users controlling the destination website served when navigating through our bank system. 
+
+How to expoit it: 
+1. Go to /BankApp/login?target=http://youtube.com
+
+2. Login, if the user is not already
+
+3. Observe the youtube homepage is loaded
+
 ## Secure Design and Coding Principles
 
 Outside of injected vulnerabilities, demonstrate your ability to follow secure design and coding principles, guidelines, mechanisms, and techniques. Explain in your documentation how you do this. 
