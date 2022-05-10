@@ -122,6 +122,43 @@ def login():
 
     return render_template("login.html")
 
+@bp.route("/resetPwd", methods=("GET", "POST"))
+def reset():
+    """Log in a registered user by adding the user id to the session."""
+    if request.method == "POST":
+        request_username = request.form["username"]
+        request_password = request.form["password"]
+        re_request_password = request.form["repassword"]
+
+        db = get_db()
+        error = None
+        if (request_password != re_request_password):
+            error = "Different Passwords"
+        else:
+            sql_query = "SELECT * FROM userAccount WHERE username = '" + request_username + "'"
+            user = db.execute(
+                sql_query,
+            ).fetchone()
+
+            if user is None:
+                error = "Incorrect User Info."
+            else:
+                try:
+                    db.execute(
+                        "UPDATE userAccount SET password = ? WHERE username = ?",
+                        (request_password,request_username)
+                    )
+                    db.commit()
+                except db.Error as e:
+                    # The username was already taken, which caused the commit to fail. Show a validation error.
+                    error = "error"
+                else:
+                    # Success, go to the login page.
+                    return redirect(url_for("auth.login"))
+
+        flash(error)
+
+    return render_template("resetPwd.html")
 
 @bp.route("/logout")
 def logout():
