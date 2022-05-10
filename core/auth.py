@@ -1,5 +1,4 @@
 import functools
-from hashlib import md5
 
 from flask import Blueprint
 from flask import flash
@@ -79,7 +78,8 @@ def register():
                 db.execute(
                     "INSERT INTO userAccount (username, password, firstName, lastName, SSN, phoneNumber, address) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (username, md5(password.encode()).hexdigest(), first_name, last_name, ssn, phone_number, address),
+                    (username, password,
+                     first_name, last_name, ssn, phone_number, address),
                 )
                 db.commit()
 
@@ -94,7 +94,8 @@ def register():
 
     return render_template("register.html")
 
-@bp.route("/login", methods=("GET", "POST"))
+
+@ bp.route("/login", methods=("GET", "POST"))
 def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
@@ -103,11 +104,11 @@ def login():
             return redirect(target)
         request_username = request.form["username"]
         request_password = request.form["password"]
-        md5_request_password = md5(request_password.encode()).hexdigest()
 
         db = get_db()
         error = None
-        sql_query = "SELECT * FROM userAccount WHERE username = '" + request_username + "' and password='" + md5_request_password + "'"
+        sql_query = "SELECT * FROM userAccount WHERE username = '" + \
+            request_username + "' and password='" + request_password + "'"
         user = db.execute(
             sql_query,
         ).fetchone()
@@ -125,7 +126,8 @@ def login():
 
     return render_template("login.html")
 
-@bp.route("/resetPwd", methods=("GET", "POST"))
+
+@ bp.route("/resetPwd", methods=("GET", "POST"))
 def reset():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
@@ -149,7 +151,7 @@ def reset():
                 try:
                     db.execute(
                         "UPDATE userAccount SET password = ? WHERE username = ?",
-                        (request_password,request_username)
+                        (request_password, request_username)
                     )
                     db.commit()
                 except db.Error as e:
@@ -163,11 +165,9 @@ def reset():
 
     return render_template("resetPwd.html")
 
+
 @bp.route("/logout")
 def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
     return redirect(url_for("auth.login"))
-
-
-

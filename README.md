@@ -65,18 +65,26 @@ Now the bank app is running on http://127.0.0.1:5000
 
 The software constructs all or part of an SQL command using externally- influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended SQL command when it is sent to a downstream component.
 
-### Case #1: login injection
+### Case #1: SQL injection in username field
 
-Description: by using SQL injection, an attacker can login to any account in the login page. 
+Description: attackers can log into any account by using the SQL injection in the username field to comment the where statement in SQL query. 
 
 How to exploit it: 
 
-1. Create a new account. Example: username "aaa", password "123". 
+1. Create a new account (example: username "aaa", password "123") or use an existed account. 
+2. Log into the account you just created, then log out. 
+3. In the login page, type `aaa' -- ` in the username field, and type anything in the password field. 
+4. Click login, now you find that you can log into any account, even when you don't have the correct password. 
 
-2. Log into the account you just created, then click "Create Account" again to set a inital deposit value. 
+### Case #2: SQL injection in password field
 
-3. Then click log out. Type `aaa' or '1' = '1` in the user name field, and type anything in the password field. 
+Description: attackers can log into any account by using the SQL injection in the password field to skip the password check. 
 
+How to exploit it: 
+
+1. Create a new account (example: username "aaa", password "123") or use an existed account. 
+2. Log into the account you just created, then log out. 
+3. In the login page, type `aaa` in the username field, and type `456' or username='aaa ` in the password field. 456 is just an example of wrong password, you can type anything instead of it. 
 4. Click login, now you find that you can log into any account, even when you don't have the correct password. 
 
 
