@@ -23,7 +23,7 @@ def deposit(id):
             error = "Deposit amount is required."
         elif not verify_amount(deposit_amount):
             error = "Invalid deposit amount."
-        update_balance = bank_account['balance'] + int(deposit_amount)
+        update_balance = bank_account['balance'] + float(deposit_amount)
 
         if error is None:
             db = get_db()
@@ -52,7 +52,7 @@ def withdraw(id):
             error = "Withdraw amount is required."
         elif not verify_amount(withdraw_amount):
             error = "Invalid withdraw amount."
-        update_balance = bank_account['balance'] - int(withdraw_amount)
+        update_balance = bank_account['balance'] - float(withdraw_amount)
 
         if update_balance < 0:
             error = "Cannot withdraw, not enough balance."
