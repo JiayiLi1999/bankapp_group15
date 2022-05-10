@@ -1,4 +1,5 @@
 import functools
+from hashlib import md5
 
 from flask import Blueprint
 from flask import flash
@@ -78,7 +79,7 @@ def register():
                 db.execute(
                     "INSERT INTO userAccount (username, password, firstName, lastName, SSN, phoneNumber, address) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (username, generate_password_hash(password), first_name, last_name, ssn, phone_number, address),
+                    (username, md5(password.encode()).hexdigest(), first_name, last_name, ssn, phone_number, address),
                 )
                 db.commit()
 
@@ -97,18 +98,19 @@ def register():
 def login():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+        request_username = request.form["username"]
+        request_password = request.form["password"]
+        md5_request_password = md5(request_password.encode()).hexdigest()
+
         db = get_db()
         error = None
+        sql_query = "SELECT * FROM userAccount WHERE username = '" + request_username + "' and password='" + md5_request_password + "'"
         user = db.execute(
-            "SELECT * FROM userAccount WHERE username = ?", (username,)
+            sql_query,
         ).fetchone()
 
         if user is None:
-            error = "Incorrect username."
-        elif not check_password_hash(user["password"], password):
-            error = "Incorrect password."
+            error = "Incorrect login information."
 
         if error is None:
             # store the user id in a new session and return to the index
