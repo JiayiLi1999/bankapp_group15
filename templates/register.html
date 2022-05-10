@@ -1,61 +1,48 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Simple registration form</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css')}}">
-  </head>
-  <body>
-    <div class="formDiv login">
+{% extends 'base.html' %}
+{% block content %}
+    <div class="formDiv">
       <h1>Registration</h1>
-      <form method="POST">
+      <form class="form-style-4" method="POST">
 <!--        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>-->
-        <div class="formline">
-        <label for="username">User Name</label>
+        <label for="username"><span>User Name</span>
         <input type="text" name="username" id="username" placeholder="Username" required/>
-        </div>
-        <div class="formline">
-        <label for="password">Password</label>
+        </label>
+
+        <label for="password"><span>Password</span>
         <input type="password" name="password" id="password" placeholder="Password" required/>
-        </div>
+        </label>
+
         <div class="formline">
-        <label for="first_name">First Name</label>
+        <label for="first_name"><span>First Name</span></label>
         <input type="text" name="first_name" id="first_name" placeholder="First Name" required/>
         </div>
-        <div class="formline">
-        <label for="last_name">Last Name</label>
+
+        <label for="last_name"><span>Last Name</span>
         <input type="text" name="last_name" id="last_name" placeholder="Last Name" required/>
-        </div>
-        <div class="formline">
-        <label for="ssn">SSN</label>
-        <input type="number" name="ssn" id="ssn" placeholder="SSN" required/>
-        </div>
-        <div class="formline">
-        <label for="phone_number">Phone Number</label>
-        <input type="number" name="phone_number" id="phone_number" placeholder="Phone Number" required/>
-        </div>
-        <div class="formline">
-        <label for="address">Address</label>
+        </label>
+
+        <label for="ssn"><span>SSN</span>
+        <input type="text" name="ssn" id="ssn" placeholder="SSN" required/>
+        </label>
+
+        <label for="phone_number"><span>Phone Number</span>
+        <input type="text" name="phone_number" id="phone_number" placeholder="Phone Number" required/>
+        </label>
+
+        <label for="address"><span>Address</span>
         <input type="text" name="address" id="address" placeholder="Address" required/>
-        </div>
-<!--        <hr>-->
-<!--        <div class="gender">-->
-<!--          <input type="radio" value="none" id="male" name="gender" checked/>-->
-<!--          <label for="male" class="radio">Male</label>-->
-<!--          <input type="radio" value="none" id="female" name="gender" />-->
-<!--          <label for="female" class="radio">Female</label>-->
-<!--        </div>-->
-<!--        <hr>-->
+        </label>
+
         <div class="btn-block">
           <p>By clicking Register, you agree on our Privacy Policy for MyBank</a>.</p>
           <button type="submit" value="Register">Submit</button>
           <button type="reset">Reset</button>
         </div>
       </form>
-      <a href="/login">
-          <button id="loginBtn" href="/login">Already Have Account?</button>
-      </a>
+        <div class="btn-block">
+          <a href="/login">
+              <button id="loginBtn" href="/login">Already Have Account?</button>
+          </a>
+        </div>
     </div>
-  </body>
-</html>
+{% endblock %}
