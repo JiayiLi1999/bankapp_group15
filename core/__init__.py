@@ -5,7 +5,7 @@ from core import db  # register the database commands
 
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True,template_folder='../templates',static_folder="../static")
     app.config.from_mapping(
         SECRET_KEY="dev",  # a default secret that should be overridden by instance config
         DATABASE=os.path.join(app.instance_path, "bank_database.sqlite"),  # store the database in the instance folder

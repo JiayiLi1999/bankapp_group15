@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash
 from core.db import get_db
 from core.utils import verify_user_login_info
 
-bp = Blueprint("auth", __name__, url_prefix="/auth")
+bp = Blueprint("auth", __name__)
 
 
 def login_required(view):
@@ -90,9 +90,9 @@ def register():
 
         flash(error)
 
-    return render_template("auth/register.html")
+    return render_template("register.html")
 
-
+@bp.route("/")
 @bp.route("/login", methods=("GET", "POST"))
 def login():
     """Log in a registered user by adding the user id to the session."""
@@ -118,7 +118,7 @@ def login():
 
         flash(error)
 
-    return render_template("auth/login.html")
+    return render_template("login.html")
 
 
 @bp.route("/logout")
