@@ -1,4 +1,6 @@
 bank_database.sqlite
+script.py
+github-add-user.sh
 
 .idea/
 .vscode
