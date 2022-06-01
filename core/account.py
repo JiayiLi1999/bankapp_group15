@@ -25,7 +25,7 @@ def dashboard():
         ).fetchall()
 
         for account in accounts:  # a user could have multiple bank accounts
-            account_info = {'id': account['id'], 'balance': account['balance']}
+            account_info = {'id': account['id'], 'balance': "{:.2f}".format(account['balance'])}
             accounts_send_to_html.append(account_info)
 
     return render_template("dashboard.html", accounts=accounts_send_to_html)
