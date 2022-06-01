@@ -109,13 +109,13 @@ def login():
         error = None
 
         ''' BAD CODE START ======================================================
-        
+
         sql_query = "SELECT * FROM userAccount WHERE username = '" + \
             request_username + "' and password='" + request_password + "'"
         user = db.execute(
             sql_query,
         ).fetchone()
-        
+
         BAD CODE END   =========================================================='''
 
         user = db.execute(
@@ -154,19 +154,18 @@ def reset():
         if (request_password != re_request_password):
             error = "Different Passwords"
         else:
-            sql_query = "SELECT * FROM userAccount WHERE username = '" + request_username + "'"
             user = db.execute(
-                sql_query,
+                "SELECT * FROM userAccount WHERE username = ?",
+                (request_username,)
             ).fetchone()
 
             if user is None:
                 error = "Incorrect User Info."
             else:
                 try:
-                    sql_query = "UPDATE userAccount SET password = '" + \
-                        request_password + "' WHERE username = '" + request_username + "'"
                     db.execute(
-                        sql_query
+                        "UPDATE userAccount SET password = ? WHERE username =?", (generate_password_hash(
+                            request_password), request_username,)
                     )
                     db.commit()
                 except db.Error as e:
