@@ -9,7 +9,7 @@ MIN_AMOUNT = 0.00
 
 def verify_amount(amount):
     # amount is restricted to positive and provided in decimal without any leading 0’s
-    pattern = re.compile('^[\d\.]+$')
+    pattern = re.compile('(0|[1-9][0-9]*)')
     match = pattern.fullmatch(amount)
     try:
         amount = float(amount)
@@ -20,6 +20,7 @@ def verify_amount(amount):
             return True
     except ValueError:
         return False
+
 
 def verify_user_login_info(input):
     # username and password are restricted to underscore, hyphens, dots, digits, and lowercase alphabetical characters
