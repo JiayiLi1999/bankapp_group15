@@ -78,7 +78,7 @@ def register():
                 db.execute(
                     "INSERT INTO userAccount (username, password, firstName, lastName, SSN, phoneNumber, address) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (username, password,
+                    (username, generate_password_hash(password),
                      first_name, last_name, ssn, phone_number, address),
                 )
                 db.commit()
@@ -107,11 +107,25 @@ def login():
 
         db = get_db()
         error = None
+
+        ''' BAD CODE START ======================================================
+        
         sql_query = "SELECT * FROM userAccount WHERE username = '" + \
             request_username + "' and password='" + request_password + "'"
         user = db.execute(
             sql_query,
         ).fetchone()
+        
+        BAD CODE END   =========================================================='''
+
+        user = db.execute(
+            "SELECT * FROM userAccount WHERE username = ?", (request_username,)
+        ).fetchone()
+
+        if user is None:
+            error = "Incorrect username."
+        elif not check_password_hash(user["password"], request_password):
+            error = "Incorrect password."
 
         if user is None:
             error = "Incorrect login information."
