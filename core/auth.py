@@ -146,6 +146,7 @@ def reset():
     """Log in a registered user by adding the user id to the session."""
     if request.method == "POST":
         request_username = request.form["username"]
+        request_ssn = request.form["ssn"]
         request_password = request.form["password"]
         re_request_password = request.form["repassword"]
 
@@ -155,8 +156,8 @@ def reset():
             error = "Different Passwords"
         else:
             user = db.execute(
-                "SELECT * FROM userAccount WHERE username = ?",
-                (request_username,)
+                "SELECT * FROM userAccount WHERE username = ? AND ssn = ?",
+                (request_username,request_ssn)
             ).fetchone()
 
             if user is None:
