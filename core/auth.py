@@ -56,10 +56,14 @@ def register():
 
         if not username:
             error = "Username is required."
+        if len(username) > 127:
+            error = "user name is too long."
         elif not verify_user_login_info(username):
             error = "Invalid username. (Restricted to '_', '-', '.', digits, and lowercase alphabetical characters)"
         elif not password:
             error = "Password is required."
+        elif len(password) < 10:
+            error = "Password is required to contain 10 characters."
         elif not verify_user_login_info(password):
             error = "Invalid password. (Restricted to '_', '-', '.', digits, and lowercase alphabetical characters)"
         elif not first_name:
@@ -68,8 +72,12 @@ def register():
             error = 'Last name required.'
         elif not ssn.isnumeric():
             error = 'Invalid SSN.'
+        elif len(ssn) != 9:
+            error = "The length of ssn is not correct."
         elif not phone_number.isnumeric():
             error = 'Invalid phone number.'
+        elif len(phone_number) != 10:
+            error = "The length of phone_number is not correct."
         elif not address:
             error = 'Address required.'
 
